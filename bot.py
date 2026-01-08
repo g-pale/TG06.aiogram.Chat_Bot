@@ -12,7 +12,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 from aiohttp import request
 import requests
 
-from config import TOKEN
+from config import TOKEN, EXCHANGE_API_KEY
 import sqlite3
 import aiohttp
 import ssl
@@ -80,7 +80,7 @@ async def registration(message: Message):
 
 @dp.message(F.text == "Курс валют")
 async def exchange_rates(message: Message):
-    url = "https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD"
+    url = f'https://v6.exchangerate-api.com/v6/{EXCHANGE_API_KEY}/latest/USD'
     try:
         response = requests.get(url)
         data = response.json()

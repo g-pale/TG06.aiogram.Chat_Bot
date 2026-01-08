@@ -42,7 +42,7 @@ if __name__ == '__main__':
     asyncio.run(main())
 ```
 
-Удаляем WEATHER_API_KEY, потому что здесь мы работать с погодой не будем.
+Удаляем WEATHER_API_KEY, потому что здесь мы работать с погодой не будем. Добавляем импорт requests для работы с API курса валют.
 
 ```python
 import asyncio
@@ -53,10 +53,12 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from config import TOKEN
+from config import TOKEN, EXCHANGE_API_KEY
 import sqlite3
 import aiohttp
 import logging
+import requests
+import requests
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -261,26 +263,31 @@ async def registration(message: Message):
 async def exchange_rates(message: Message):
 ```
 
-Для выдачи курса валют мы будем запрашивать информацию без API, с помощью URL-ссылки. Чтобы получить ссылку:
+Для выдачи курса валют мы будем запрашивать информацию через API. Чтобы получить API ключ:
 1. Переходим на сайт app.exchangerate-api.com/sign-up
 2. Вводим адрес электронной почты, придумываем пароль. Бесплатный период — две недели.
 3. Нажимаем на кнопку Accept Terms & Create API Key!.
 4. Если потребуется, проходим капчу.
-5. Переходим по ссылке из письма и копируем ссылку Example Request.
+5. Переходим по ссылке из письма и копируем API ключ.
 
-Вставляем ссылку в переменную url. Используем конструкцию TRY—EXCEPT, чтобы избежать ошибок.
+Добавляем API ключ в файл config.py:
+```python
+EXCHANGE_API_KEY = "ваш-api-ключ"
+```
+
+Импортируем EXCHANGE_API_KEY вместе с TOKEN. Используем конструкцию TRY—EXCEPT, чтобы избежать ошибок.
 
 ```python
 @dp.message(F.text == "Курс валют")
 async def exchange_rates(message: Message):
-    url = "https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD"
+    url = f"https://v6.exchangerate-api.com/v6/{EXCHANGE_API_KEY}/latest/USD"
     try:
 ```
 
-Импортируем библиотеку request
+Импортируем библиотеку requests и добавляем EXCHANGE_API_KEY в импорт из config:
 
 ```python
-from config import TOKEN
+from config import TOKEN, EXCHANGE_API_KEY
 import sqlite3
 import aiohttp
 import logging
@@ -292,7 +299,7 @@ import requests
 ```python
 @dp.message(F.text == "Курс валют")
 async def exchange_rates(message: Message):
-    url = "https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD"
+    url = f"https://v6.exchangerate-api.com/v6/{EXCHANGE_API_KEY}/latest/USD"
     try:
         response = requests.get(url)
 ```
@@ -302,7 +309,7 @@ async def exchange_rates(message: Message):
 ```python
 @dp.message(F.text == "Курс валют")
 async def exchange_rates(message: Message):
-    url = "https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD"
+    url = f"https://v6.exchangerate-api.com/v6/{EXCHANGE_API_KEY}/latest/USD"
     try:
         response = requests.get(url)
         data = response.json()
@@ -316,7 +323,7 @@ async def exchange_rates(message: Message):
 ```python
 @dp.message(F.text == "Курс валют")
 async def exchange_rates(message: Message):
-    url = "https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD"
+    url = f"https://v6.exchangerate-api.com/v6/{EXCHANGE_API_KEY}/latest/USD"
     try:
         response = requests.get(url)
         data = response.json()
@@ -337,7 +344,7 @@ async def exchange_rates(message: Message):
 ```python
 @dp.message(F.text == "Курс валют")
 async def exchange_rates(message: Message):
-    url = "https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD"
+    url = f"https://v6.exchangerate-api.com/v6/{EXCHANGE_API_KEY}/latest/USD"
     try:
         response = requests.get(url)
         data = response.json()
@@ -355,7 +362,7 @@ async def exchange_rates(message: Message):
 ```python
 @dp.message(F.text == "Курс валют")
 async def exchange_rates(message: Message):
-    url = "https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD"
+    url = f"https://v6.exchangerate-api.com/v6/{EXCHANGE_API_KEY}/latest/USD"
     try:
         response = requests.get(url)
         data = response.json()
@@ -376,7 +383,7 @@ async def exchange_rates(message: Message):
 ```python
 @dp.message(F.text == "Курс валют")
 async def exchange_rates(message: Message):
-    url = "https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD"
+    url = f"https://v6.exchangerate-api.com/v6/{EXCHANGE_API_KEY}/latest/USD"
     try:
         response = requests.get(url)
         data = response.json()
